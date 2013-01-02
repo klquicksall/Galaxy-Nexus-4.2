@@ -216,7 +216,7 @@ static const u8 twl6040_reg_supply[TWL6040_CACHEREGNUM] = {
 	TWL6040_VIO_SUPPLY, /* TWL6040_STATUS (ro)	*/
 };
 
-unsigned int volume_boost = 2;
+unsigned int volume_boost = 3;
 
 /*
  * read twl6040 register cache
@@ -753,8 +753,8 @@ static int pga_event(struct snd_soc_dapm_widget *w,
 			break;
 
 		/* don't use volume ramp for power-up */
-		out->left_step = out->left_vol + volume_boost;
-		out->right_step = out->right_vol + volume_boost;
+		out->left_step = out->left_vol;
+		out->right_step = out->right_vol;
 
 		if (!delayed_work_pending(work)) {
 			out->ramp = TWL6040_RAMP_UP;
@@ -923,11 +923,6 @@ static int twl6040_put_volsw(struct snd_kcontrol *kcontrol,
 		out->right_vol = ucontrol->value.integer.value[1];
 		if (!out->active)
 			return 1;
-	}
-	
-	if (&twl6040_priv->headset.active) {
-		ucontrol->value.integer.value[0] += volume_boost;
-		ucontrol->value.integer.value[1] += volume_boost;
 	}
 
 	ret = snd_soc_put_volsw(kcontrol, ucontrol);
