@@ -216,7 +216,7 @@ static const u8 twl6040_reg_supply[TWL6040_CACHEREGNUM] = {
 	TWL6040_VIO_SUPPLY, /* TWL6040_STATUS (ro)	*/
 };
 
-unsigned int volume_boost = 2;
+unsigned int volume_boost = 3;
 
 /*
  * read twl6040 register cache
