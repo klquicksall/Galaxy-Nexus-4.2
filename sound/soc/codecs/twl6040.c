@@ -216,8 +216,6 @@ static const u8 twl6040_reg_supply[TWL6040_CACHEREGNUM] = {
 	TWL6040_VIO_SUPPLY, /* TWL6040_STATUS (ro)	*/
 };
 
-unsigned int volume_boost = 3;
-
 /*
  * read twl6040 register cache
  */
@@ -372,10 +370,9 @@ static inline int twl6040_hs_ramp_step(struct snd_soc_codec *codec,
 
 	if (headset->ramp == TWL6040_RAMP_UP) {
 		/* ramp step up */
-		int volume = headset->left_vol + volume_boost;
-		if (val < volume) {
-			if (val + left_step > volume)
-				val = volume;
+		if (val < headset->left_vol) {
+			if (val + left_step > headset->left_vol)
+				val = headset->left_vol;
 			else
 				val += left_step;
 
@@ -387,10 +384,9 @@ static inline int twl6040_hs_ramp_step(struct snd_soc_codec *codec,
 		}
 	} else if (headset->ramp == TWL6040_RAMP_DOWN) {
 		/* ramp step down */
-		int volume = headset->left_vol + volume_boost;
-		if (val > volume) {
-			if ((int)val - (int)left_step < volume)
-				val = volume;
+		if (val > 0x0) {
+			if ((int)val - (int)left_step < 0)
+				val = 0;
 			else
 				val -= left_step;
 
@@ -409,10 +405,9 @@ static inline int twl6040_hs_ramp_step(struct snd_soc_codec *codec,
 
 	if (headset->ramp == TWL6040_RAMP_UP) {
 		/* ramp step up */
-		int volume = headset->right_vol + volume_boost;
-		if (val < volume) {
-			if (val + right_step > volume)
-				val = volume;
+		if (val < headset->right_vol) {
+			if (val + right_step > headset->right_vol)
+				val = headset->right_vol;
 			else
 				val += right_step;
 
@@ -424,10 +419,9 @@ static inline int twl6040_hs_ramp_step(struct snd_soc_codec *codec,
 		}
 	} else if (headset->ramp == TWL6040_RAMP_DOWN) {
 		/* ramp step down */
-		int volume = headset->right_vol + volume_boost;
-		if (val > volume) {
-			if ((int)val - (int)right_step < volume)
-				val = volume;
+		if (val > 0x0) {
+			if ((int)val - (int)right_step < 0)
+				val = 0;
 			else
 				val -= right_step;
 
@@ -753,8 +747,8 @@ static int pga_event(struct snd_soc_dapm_widget *w,
 			break;
 
 		/* don't use volume ramp for power-up */
-		out->left_step = out->left_vol + volume_boost;
-		out->right_step = out->right_vol + volume_boost;
+		out->left_step = out->left_vol;
+		out->right_step = out->right_vol;
 
 		if (!delayed_work_pending(work)) {
 			out->ramp = TWL6040_RAMP_UP;
@@ -923,11 +917,6 @@ static int twl6040_put_volsw(struct snd_kcontrol *kcontrol,
 		out->right_vol = ucontrol->value.integer.value[1];
 		if (!out->active)
 			return 1;
-	}
-	
-	if (&twl6040_priv->headset.active) {
-		ucontrol->value.integer.value[0] += volume_boost;
-		ucontrol->value.integer.value[1] += volume_boost;
 	}
 
 	ret = snd_soc_put_volsw(kcontrol, ucontrol);
