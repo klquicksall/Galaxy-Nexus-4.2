@@ -579,23 +579,41 @@ source "drivers/misc/lis3lv02d/Kconfig"
 source "drivers/misc/carma/Kconfig"
 source "drivers/misc/modem_if/Kconfig"
 
+<<<<<<< HEAD:drivers/misc/Kconfig~
 config CUSTOM_VOLTAGE
 	bool "Support for Custom Voltage"
 	default y
 	help
 	  Say Y here to enable Custom Voltage
+=======
+>>>>>>> franco/jb-pre1:drivers/misc/Kconfig
 config COLOR_CONTROL
 	bool "Support for Color Control"
 	default y
 	help
 	  Say Y here to enable Color Control
+<<<<<<< HEAD:drivers/misc/Kconfig~
+=======
+
+config CUSTOM_VOLTAGE
+	bool "Support for Custom Voltage"
+	default y
+	help
+	  Say Y here to enable Custom Voltage
+
+>>>>>>> franco/jb-pre1:drivers/misc/Kconfig
 config BLX
 	bool "Support for Battery Life eXtender"
 	default y
 	help
+<<<<<<< HEAD:drivers/misc/Kconfig~
 	  Say Y here to enable Battery Life eXtender
 		Say Y here to enable Battery Life eXtender
 		
+=======
+		Say Y here to enable Battery Life eXtender
+
+>>>>>>> franco/jb-pre1:drivers/misc/Kconfig
 config SOUND_CONTROL
 	bool "Enable support for Sound Control"
 	default y
